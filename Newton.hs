@@ -25,10 +25,12 @@ newton :: (Fractional a, Ord a) =>
           -> (Sum Int, Interval a)
 newton err f df !x0 = iter 1 x0 (next 1 x0)
  where
-  recp inter = (recip s ... recip i)
-   where (i,s) = (inf inter, sup inter)
-  next idx x = x `intersection` (singleton mx - f mx * recp (df x))
-   where mx = (if mod idx 2 == 0 then inf else sup) x
+  recp inter
+   | (i,s) <- (inf inter, sup inter)
+   = (recip s ... recip i)
+  next idx x
+   | mx <- (if mod idx 2 == 0 then inf else sup) x
+   = x `intersection` (singleton mx - f mx * recp (df x))
   iter idx ant curr
    | width curr <= err          ||
      distance ant curr <= err = (1,curr)
@@ -43,7 +45,9 @@ newtonN :: (Fractional a, Ord a) =>
            -> IVector a
 newtonN err f df !x0 = iter x0 (next x0)
  where
-  next x = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx))) where mx = midV x
+  next x
+   | mx <- midV x
+   = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx)))
   iter ant curr
    | any ((<=err) . width) curr ||
      widthV curr <= err         ||
@@ -71,8 +75,9 @@ newtonMult err f df !x
  | 0 `notMember` df x = [newton err f df x]
  | otherwise = concatMap (newtonMult err f df) bisection
  where
-  bisection = let mx = midpoint x
-   in filter (not.isEmpty) $ map (\r -> x `intersection` (singleton mx - f mx * r)) $ reciprical $ df x
+  bisection
+   | mx <- midpoint x
+   = filter (not.isEmpty) $ map (\r -> x `intersection` (singleton mx - f mx * r)) $ reciprical $ df x
 
 -- show function versions
 
@@ -89,8 +94,9 @@ newtonShow err f df strF !x0 = do
       \\n\n  x0\t= %s\n" strF (show err) (show x0) :: IO ()
  iter 1 x0 (next 1 x0)
  where
-  next idx x = x `intersection` (singleton mx - f mx / df x)
-   where mx = (if mod idx 2 == 0 then inf else sup) x
+  next idx x
+   | mx <- (if mod idx 2 == 0 then inf else sup) x
+   = x `intersection` (singleton mx - f mx / df x)
   iter idx ant curr
    | width curr <= err          ||
      isEmpty curr               ||
@@ -109,7 +115,9 @@ newtonNShow :: (Fractional a, Ord a, Show a) =>
            -> IO ()
 newtonNShow err f df !x0 = iter 1 x0 (next x0)
  where
-  next x = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx))) where mx = midV x
+  next x
+   | mx <- midV x
+   = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx)))
   iter idx ant curr
    | widthV curr <= err          ||
      isEmptyV curr               || 
@@ -142,5 +150,6 @@ newtonMultShow err f df strF !x
   putStrLn "split"
   sequence_ $ map (newtonMultShow err f df strF) bisection
  where
-  bisection = let mx = midpoint x
-   in map (\r -> x `intersection` (singleton mx - f mx * r)) $ reciprical $ df x
+  bisection
+   | mx <- midpoint x
+   = map (\r -> x `intersection` (singleton mx - f mx * r)) $ reciprical $ df x

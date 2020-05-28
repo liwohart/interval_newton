@@ -23,12 +23,14 @@ newton :: (Fractional a, Ord a) =>
           -> (Interval a -> Interval a) -- its derivitive
           -> Interval a                 -- initial interval
           -> (Sum Int, Interval a)
-newton err f df x0 = iter 1 x0 (next 1 x0)
+newton err f df !x0 = iter 1 x0 (next 1 x0)
  where
-  recp inter = (recip s ... recip i)
-   where (i,s) = (inf inter, sup inter)
-  next idx x = x `intersection` (singleton mx - f mx * recp (df x))
-   where mx = (if mod idx 2 == 0 then inf else sup) x
+  recp inter
+   | (i,s) <- (inf inter, sup inter)
+   = (recip s ... recip i)
+  next idx x
+   | mx <- (if mod idx 2 == 0 then inf else sup) x
+   = x `intersection` (singleton mx - f mx * recp (df x))
   iter idx ant curr
    | width curr <= err          ||
      distance ant curr <= err = (1,curr)
@@ -41,7 +43,7 @@ newtonN :: (Fractional a, Ord a) =>
            -> (IVector a -> IMatrix a)
            -> IVector a
            -> IVector a
-newtonN err f df x0 = iter x0 (next x0)
+newtonN err f df !x0 = iter x0 (next x0)
  where
   next x = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx))) where mx = midV x
   iter ant curr
@@ -58,7 +60,7 @@ safeNewton :: (Fractional a, Ord a) =>
               -> (Interval a -> Interval a) -- its derivitive
               -> Interval a                 -- an initial interval
               -> Maybe (Sum Int, Interval a)
-safeNewton err f df x = if 0 `member` df x then Nothing else Just $ newton err f df x
+safeNewton err f df !x = if 0 `member` df x then Nothing else Just $ newton err f df x
 {-# INLINE safeNewton #-}
 
 newtonMult :: (Fractional a, Ord a, Show a) =>
@@ -67,7 +69,7 @@ newtonMult :: (Fractional a, Ord a, Show a) =>
               -> (Interval a -> Interval a)-- its derivitive
               -> Interval a                -- initial interval
               -> [(Sum Int, Interval a)]
-newtonMult err f df x
+newtonMult err f df !x
  | 0 `notMember` df x = [newton err f df x]
  | otherwise = concatMap (newtonMult err f df) bisection
  where
@@ -83,7 +85,7 @@ newtonShow :: (Fractional a, Ord a, Show a) => --, PrintfArg a) =>
               -> String                    -- function formula
               -> Interval a                -- initial interval
               -> IO ()
-newtonShow err f df strF x0 = do
+newtonShow err f df strF !x0 = do
  printf "\n Function: %s\
       \\n\n Error threshold: %s\
       \\n\n  x0\t= %s\n" strF (show err) (show x0) :: IO ()
@@ -107,7 +109,7 @@ newtonNShow :: (Fractional a, Ord a, Show a) =>
            -> (IVector a -> IMatrix a)
            -> IVector a
            -> IO ()
-newtonNShow err f df x0 = iter 1 x0 (next x0)
+newtonNShow err f df !x0 = iter 1 x0 (next x0)
  where
   next x = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx))) where mx = midV x
   iter idx ant curr
@@ -126,7 +128,7 @@ safeNewtonShow :: (Fractional a, Ord a, Show a, PrintfArg a) =>
                   -> String                     -- function formula
                   -> Interval a                 -- an initial interval
                   -> IO ()
-safeNewtonShow err f df strF x = if 0 `member` df x then putStrLn "\n 0 ´member` df x" else newtonShow err f df strF x
+safeNewtonShow err f df strF !x = if 0 `member` df x then putStrLn "\n 0 ´member` df x" else newtonShow err f df strF x
 {-# INLINE safeNewtonShow #-}
 
 newtonMultShow :: (Fractional a, Ord a, Show a, PrintfArg a) =>
@@ -136,7 +138,7 @@ newtonMultShow :: (Fractional a, Ord a, Show a, PrintfArg a) =>
               -> String                    -- function formula
               -> Interval a                -- initial threshold
               -> IO ()
-newtonMultShow err f df strF x 
+newtonMultShow err f df strF !x 
  | 0 `notMember` df x = newtonShow err f df strF x
  | otherwise = do
   putStrLn "split"

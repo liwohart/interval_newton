@@ -84,6 +84,7 @@ negV :: Num a => Vector a -> Vector a
 negV v = map negate v
 {-# INLINE negV #-}
 
+
 distanceV :: (Fractional a, Ord a) => IVector a -> IVector a -> a
 distanceV = (sum .) . zipWith distance
 {-# INLINE distanceV #-}
@@ -123,9 +124,11 @@ ga :: Fractional a => Joined a -> Joined a
 ga mat = fst $ (iterate update (mat, 0))!!(length mat - 1)
  where update (matrix, idx) = (eliminateColumn matrix idx, idx + 1)
 
+
 sum' :: Num a => [Vector a] -> Vector a
 sum' m = foldl' (!+!) (map (const 0) [0..]) m
 {-# INLINE sum' #-}
+
 
 ga' :: Fractional a => LinearSystem a -> Joined a
 ga' ls@(m,b) = [bigL rows r | r <- [0..rows]]
@@ -139,9 +142,11 @@ ga' ls@(m,b) = [bigL rows r | r <- [0..rows]]
     ani m p = (1/(lmp!!p)) *! lmp
      where lmp = bigL m p
 
+
 solve :: Fractional a => Matrix a -> Vector a -> Vector a
 solve = ((backSubs . ga . mkJoined) .) . (,)
 {-# INLINE solve #-}
+
 
 backSubs :: Fractional a => Joined a -> Vector a
 backSubs mat = sol
@@ -156,6 +161,7 @@ iga :: (Fractional a, Ord a) => IMatrix a -> IVector a -> IVector a
 iga = ((backSubs . ga . mkJoined) .) . (,)
 {-# INLINE iga #-}
 
+
 --eliminateColumngH :: Fractional a => Joined a -> Int -> Joined a
 --eliminateColumngH mat pivot = [eliminateMat i | i <- [0..n]]
 -- where
@@ -169,6 +175,7 @@ iga = ((backSubs . ga . mkJoined) .) . (,)
 --ga :: Fractional a => Joined a -> Joined a
 --ga mat = fst $ (iterate update (mat, 0))!!(length mat - 1)
 -- where update (matrix, idx) = (eliminateColumn matrix idx, idx + 1)
+
 
 isEmpty :: Ord a => Interval a -> Bool
 isEmpty = Numeric.Interval.null
@@ -192,9 +199,11 @@ l \/ r
  | otherwise = r ... l
 {-# INLINE (\/) #-}
 
+
 gH :: (Num a, Ord a) => Interval a -> Interval a -> Interval a
 gH x y = (inf x - inf y) \/ (sup x - sup y)
 {-# INLINE gH #-}
+
 
 monotonic :: Ord b => (a -> b) -> Interval a -> Interval b
 monotonic _ I.Empty = I.Empty

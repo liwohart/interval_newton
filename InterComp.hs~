@@ -38,6 +38,7 @@ type Joined a = [[a]]
 
 
 showVM v = "  [ " ++ (intercalate "\n  , " $ map show v) ++ " ]"
+{-# INLINE showVM #-}
 
 
 (!+!) :: Num a => Vector a -> Vector a -> Vector a
@@ -61,6 +62,7 @@ intersecV u v
  | any isEmpty inter = map (const empty) v
  | otherwise = inter
  where inter = zipWith intersection v u
+{-# INLINE intersecV #-}
 
 
 midV :: Fractional a => IVector a -> Vector a
@@ -181,10 +183,13 @@ distance i1 i2 = max distInf distSup
  where
   distInf = abs (inf i1 - inf i2)
   distSup = abs (sup i1 - sup i2)
+{-# INLINE distance #-}
 
 
 (\/) :: Ord a => a -> a -> Interval a
-l \/ r = if l <= r then l ... r else r ... l
+l \/ r 
+ | l <= r = l ... r
+ | otherwise = r ... l
 {-# INLINE (\/) #-}
 
 gH :: (Num a, Ord a) => Interval a -> Interval a -> Interval a
@@ -194,6 +199,7 @@ gH x y = (inf x - inf y) \/ (sup x - sup y)
 monotonic :: Ord b => (a -> b) -> Interval a -> Interval b
 monotonic _ I.Empty = I.Empty
 monotonic f i = f (inf i) \/ f (sup i)
+{-# INLINE monotonic #-}
 
 
 reciprical :: (Fractional a, Ord a) => Interval a -> [Interval a]
@@ -203,10 +209,13 @@ reciprical (I.I 0 s) = [1/s ... 1/0]
 reciprical (I.I i s)
  | i > 0 || s < 0     = [1/s ... 1/i]
  | otherwise          = [-1/0 ... 1/i, 1/s ... 1/0]
+{-# INLINE reciprical #-}
 
 
 (!^) :: (Ord a, Num a, Integral b) => Interval a -> b -> Interval a
-i !^ e = if odd e || inf i >= 0 || sup i <= 0 then monotonic (^e) i else 0 ... (magnitude i ^ e)
+i !^ e
+ | odd e || inf i >= 0 || sup i <= 0 = monotonic (^e) i
+ | otherwise = 0 ... (magnitude i ^ e)
 {-# INLINE (!^) #-}
 
 
