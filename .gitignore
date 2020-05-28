@@ -1,5 +1,6 @@
 ..gitignore.un~
 .gitignore~
+dist/Metric.hs
 .rnp.hs.un~
 rnp.hs
 rnp.hs~
