@@ -1,4 +1,5 @@
 import System.Environment
+import Refinement
 import InterComp
 import Newton
 import Data.Function (on)
@@ -148,8 +149,7 @@ err :: Double
 err = 1e-10
 
 printList :: Show a => [a] -> IO ()
-printList = endl <=< sequence_ . map print 
- where endl = const $ putStrLn ""
+printList = mapM_ print 
 
 answers :: [Maybe (Int, Interval Double)]
 answers = map ( fmap ((,) <$> getSum . fst <*> snd) . flip performSafeNewtonFs err) [0..length fs - 1]
