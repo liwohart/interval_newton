@@ -1,6 +1,7 @@
 :set editor vim
 :set +s
 :set +m
+:set +c
 :set prompt "\x03BB> "
 :set prompt-cont " > "
 :m + Data.List

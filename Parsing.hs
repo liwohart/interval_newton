@@ -1,32 +1,44 @@
-module Parsing (getOptions) where
+module Parsing (getOptions, ShowOpt(..)) where
 
 import System.Console.GetOpt
 import System.Environment (getArgs)
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, maybe)
 import Data.Function ((&))
+import Data.Char (isDigit)
 import InterComp
 import Fs
+
+data ShowOpt
+ = S
+ | P Int
+ | R
+ | I
+ deriving (Show, Read)
 
 data Options = Options
  { function_id :: Int
  , precision  :: Double
  , initial_x  :: Maybe (Double, Double)
- , show_stuff :: Bool
+ , show_stuff :: ShowOpt
  } deriving Show
 
-type OptionsTuple = (Int, Double, Maybe (Double, Double), Bool)
+type OptionsTuple = (Int, Double, Maybe (Double, Double), ShowOpt)
 
 defaultOpts = Options
  { function_id = 0
  , precision = 0.0
  , initial_x = Nothing
- , show_stuff = False
+ , show_stuff = S
  }
 
 
 toTuple :: Options -> OptionsTuple
 toTuple (Options f p i s) = (f,p,i,s)
 
+parseShowOpt :: String -> ShowOpt
+parseShowOpt s@(c:cs)
+ | isDigit c = P $ read s
+ | otherwise = read s
 
 options :: [OptDescr (Options -> Options)]
 options = 
@@ -40,7 +52,7 @@ options =
     (ReqArg ((\i opts -> opts {initial_x = Just i}) . read) "interval")
     "precision tolerance"
  , Option ['s'] ["show-stuff"]
-    (NoArg (\opts -> opts {show_stuff = True}))
+    (OptArg ((\s opts -> opts {show_stuff = s}) . maybe (P 10) parseShowOpt) "show option [S, P [], R, I]")
     "show the calculations"
  ]
 

@@ -16,11 +16,11 @@ subdivide n x = let w = width x / fromIntegral n
                     (i,s) = (inf x, sup x)
                  in [(i + (fromIntegral m) * w)...(i + (fromIntegral $ m + 1) * w) | m <- [0..n - 1]]
 
-refinement :: (Fractional a, Ord a) => Int -> (Interval a -> Interval a) -> Interval a -> Interval a
+refinement :: (Fractional a, Ord a, Monoid b) => Int -> (Interval a -> b) -> Interval a -> b
 refinement 1 f = f
 refinement n f = foldMap f . subdivide n
 
-refinementM :: (Monad m, Fractional a, Ord a) => Int -> (Interval a -> m (Interval a)) -> Interval a -> m (Interval a)
+refinementM :: (Monad m, Fractional a, Ord a, Monoid b) => Int -> (Interval a -> m b) -> Interval a -> m b
 refinementM 1 f = f
 refinementM n f = fmap fold . mapM f . subdivide n
 

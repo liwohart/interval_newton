@@ -27,7 +27,7 @@ module InterComp (module Numeric.Interval,
 
 import Numeric.Interval hiding (distance, elem, notElem, intersection)
 import qualified Numeric.Interval.Internal as I
-import Data.List
+import Data.List (intercalate, foldl')
 
 type Vector a = [a]
 type Matrix a = Vector (Vector a)
