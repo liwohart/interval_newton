@@ -1,8 +1,0 @@
-:set editor vim
-:set +s
-:set +m
-:set +c
-:set prompt "\x03BB> "
-:set prompt-cont " > "
-:m + Data.List
-:def fuck (fmap (const "") . mapM_ putStrLn . flip replicate "fuck" . read)
