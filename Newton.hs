@@ -1,6 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE CPP #-}
-#define MID 0
+#define MID 1
 
 module Newton (newton,
                newtonShow,
