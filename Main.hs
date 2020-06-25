@@ -6,6 +6,7 @@ import Newton
 import Parsing
 import Fs
 import Performs
+import Fuck
 
 main :: IO ()
 main = do

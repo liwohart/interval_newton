@@ -27,3 +27,8 @@ refinementM n f = fmap fold . mapM f . subdivide n
 refinementM_ :: (Monad m, Fractional a, Ord a) => Int -> (Interval a -> m ()) -> Interval a -> m ()
 refinementM_ 1 f = f
 refinementM_ n f = mapM_ f . subdivide n
+
+safeRefinement :: (Fractional a, Ord a, Monoid b) => Int -> (Interval a -> Maybe b) -> Interval a -> Maybe b
+safeRefinement = undefined
+--safeRefinement 1 f = f
+--safeRefinement n f = foldMap f . subdivide n

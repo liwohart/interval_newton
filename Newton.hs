@@ -153,7 +153,7 @@ safeNewtonShow :: (Fractional a, Ord a, Show a, PrintfArg a) =>
                   -> Interval a                 -- an initial interval
                   -> IO ()
 safeNewtonShow err f df strF maxI !x
- | 0 `member` df x = putStrLn "\n 0 ´member` df x"
+ | 0 `member` df x = printf "\n Function: %s \n\n Error threshold: %s \n\n  x0\t= %s\n\n\n  0 ´member` f' x\n\n" strF (show err) (show x)
  | otherwise = newtonShow err f df strF maxI x
 {-# INLINE safeNewtonShow #-}
 
