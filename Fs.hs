@@ -1,8 +1,10 @@
 module Fs (fs) where
 
 import InterComp
+import Fuck
 
-fs :: [(Interval Double, Double -> Interval Double, Interval Double -> Interval Double, String, Maybe (Interval Double))]
+fs :: (Floating a, Ord a) =>
+      [(Interval a, a -> Interval a, Interval a -> Interval a, String, Maybe (Interval a))]
 fs =
  [
 
@@ -155,7 +157,14 @@ fs =
    \x -> (singleton x) + (-2...2),
    \x -> singleton 1,
    "x + [-2,2]",
-   Just $ -2...2)
+   Just $ -2...2),
+
+--19
+  (part 0,
+   f,
+   f',
+   strF,
+   Nothing)
 
 
  ]

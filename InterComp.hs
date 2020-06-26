@@ -22,12 +22,17 @@ module InterComp (module Numeric.Interval,
                   Matrix,
                   IVector,
                   IMatrix,
-                  showVM) where
+                  showVM,
+                  isin,
+                  icos,
+                  upperHalf,
+                  lowerHalf) where
 
 
 import Numeric.Interval hiding (distance, elem, notElem, intersection)
 import qualified Numeric.Interval.Internal as I
-import Data.List (intercalate, foldl')
+import Data.List (intercalate, foldl', maximumBy)
+import Data.Function (on)
 
 type Vector a = [a]
 type Matrix a = Vector (Vector a)
@@ -36,6 +41,25 @@ type IMatrix a = Matrix (Interval a)
 type LinearSystem a = (Matrix a, Vector a)
 type Joined a = [[a]]
 
+instance Enum a => Enum (Interval a) where
+  fromEnum = fromEnum . sup
+  toEnum = singleton . toEnum
+
+instance Integral a => Integral (Interval a) where
+  quotRem a b = (iquot a b, imod a b)
+  toInteger x = toInteger $ maximumBy (compare `on` abs) [inf x, sup x]
+
+upperHalf x = midpoint x ... sup x
+{-# INLINE upperHalf #-}
+
+lowerHalf x = inf x ... midpoint x
+{-# INLINE lowerHalf #-}
+
+icos x = monotonic cos x
+{-# INLINE icos #-}
+
+isin x = monotonic sin x
+{-# INLINE isin #-}
 
 showVM v = "  [ " ++ (intercalate "\n  , " $ map show v) ++ " ]"
 {-# INLINE showVM #-}

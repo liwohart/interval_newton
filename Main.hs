@@ -6,10 +6,9 @@ import Newton
 import Parsing
 import Fs
 import Performs
-import Fuck
+import Fuck (part)
+
+(x0, f, f', strF, _) = fs!!19
 
 main :: IO ()
-main = do
- opts <- getOptions
- system "cls"
- performSafeFs opts
+main = getOptions >>= performSafeFs
