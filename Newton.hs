@@ -13,7 +13,7 @@ module Newton (newton,
 
 import InterComp
 import Text.Printf (printf, PrintfArg(..))
-import Data.Monoid (Sum(..))
+import Data.Monoid (Sum(..), getSum)
 import Control.Monad (join)
 
 
@@ -23,7 +23,7 @@ newton :: (Fractional a, Ord a) =>
           -> (Interval a -> Interval a) -- its derivitive
           -> Interval a                 -- initial interval
           -> (Sum Int, Interval a)
-newton err f df !x0 = iter 1 x0 (next 1 x0)
+newton err f df = iter 1 <*> next 1
  where
   recp inter
    | (i,s) <- (inf inter, sup inter)
@@ -47,7 +47,7 @@ newtonN :: (Fractional a, Ord a) =>
            -> (IVector a -> IMatrix a)
            -> IVector a
            -> IVector a
-newtonN err f df !x0 = iter x0 (next x0)
+newtonN err f df = iter <*> next
  where
   next x
    | mx <- midV x
@@ -95,7 +95,7 @@ newtonShow :: (Fractional a, Ord a, Show a) =>
               -> Int                       -- maximum number of iterations shown
               -> Interval a                -- initial interval
               -> IO ()
-newtonShow err f df strF maxI !x0 = do
+newtonShow err f df strF maxI x0 = do
  printf "\n Function: %s \n\n Error threshold: %s \n\n  x0\t= %s\n" strF (show err) (show x0)
  iter 1 x0 (next 1 x0)
  where

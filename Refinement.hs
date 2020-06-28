@@ -4,11 +4,6 @@ import InterComp
 import Newton
 import Data.Foldable (fold)
 
-instance Ord a => Semigroup (Interval a) where
- (<>) = hull
-
-instance Ord a => Monoid (Interval a) where
- mempty = empty
 
 
 subdivide :: (Fractional a, Ord a) => Int -> Interval a -> [Interval a]

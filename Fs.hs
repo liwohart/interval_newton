@@ -160,7 +160,7 @@ fs =
    Just $ -2...2),
 
 --19
-  (part 0,
+  (partPi2 0,
    f,
    f',
    strF,

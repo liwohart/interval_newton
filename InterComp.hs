@@ -41,6 +41,12 @@ type IMatrix a = Matrix (Interval a)
 type LinearSystem a = (Matrix a, Vector a)
 type Joined a = [[a]]
 
+instance Ord a => Semigroup (Interval a) where
+ (<>) = hull
+
+instance Ord a => Monoid (Interval a) where
+ mempty = empty
+
 instance Enum a => Enum (Interval a) where
   fromEnum = fromEnum . sup
   toEnum = singleton . toEnum
