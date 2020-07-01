@@ -160,7 +160,7 @@ fs =
    Just $ -2...2),
 
 --19
-  (partPi2 0,
+  (domInterval 1,
    f,
    f',
    strF,

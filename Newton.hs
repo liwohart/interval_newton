@@ -46,7 +46,7 @@ newtonN :: (Fractional a, Ord a) =>
            -> (Vector a -> IVector a)
            -> (IVector a -> IMatrix a)
            -> IVector a
-           -> IVector a
+           -> (Sum Int, IVector a)
 newtonN err f df = iter <*> next
  where
   next x
@@ -56,8 +56,8 @@ newtonN err f df = iter <*> next
    | any ((<=err) . width) curr ||
      widthV curr <= err         ||
      isEmptyV curr              || 
-     distanceV ant curr <= err = curr
-   | otherwise = iter curr (next curr)
+     distanceV ant curr <= err = (1,curr)
+   | otherwise = join (1,iter curr (next curr))
 
 
 safeNewton :: (Fractional a, Ord a) =>

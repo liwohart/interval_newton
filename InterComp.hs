@@ -7,7 +7,6 @@ module InterComp (module Numeric.Interval,
                   backSubs,
                   isEmpty,
                   distance,
-                  intersection,
                   distanceV,
                   intersecV,
                   singleV,
@@ -29,7 +28,7 @@ module InterComp (module Numeric.Interval,
                   lowerHalf) where
 
 
-import Numeric.Interval hiding (distance, elem, notElem, intersection)
+import Numeric.Interval hiding (distance, elem, notElem)
 import qualified Numeric.Interval.Internal as I
 import Data.List (intercalate, foldl', maximumBy)
 import Data.Function (on)
@@ -79,12 +78,6 @@ showVM v = "  [ " ++ (intercalate "\n  , " $ map show v) ++ " ]"
 (*!) :: Num a => a -> Vector a -> Vector a
 (*!) alpha = map (*alpha)
 {-# INLINE (*!) #-}
-
-
-intersection :: Ord a => Interval a -> Interval a -> Interval a
-intersection x y = (max i i') ... (min s s')
- where (i,i',s,s') = (inf x, inf y, sup x, sup y)
-{-# INLINE intersection #-}
 
 
 intersecV :: (Ord a) => IVector a -> IVector a -> IVector a
