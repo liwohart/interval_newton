@@ -19,21 +19,21 @@ performNewtonFs :: Int -> Double -> Maybe (Interval Double) -> (Sum Int, Interva
 performNewtonFs idx err
  | idx < maxNum = let (inter, f, df, _, _) = fs!!idx 
                     in newton err f df . fromMaybe inter
- | otherwise = error $ "No such function, try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ "No such function, try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performNewtonFs #-}
 
 performNewtonMultFs :: Int -> Double -> Maybe (Interval Double) -> (Sum Int, [Interval Double])
 performNewtonMultFs idx err
  | idx < maxNum = let (inter, f, df, _, _) = fs!!idx
                     in sequence . newtonMult err f df . fromMaybe inter
- | otherwise = error $ "No such function, try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ "No such function, try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performNewtonMultFs #-}
 
 performSafeNewtonFs :: Int -> Double -> Maybe (Interval Double) -> Maybe (Sum Int, Interval Double)
 performSafeNewtonFs idx err
  | idx < maxNum = let (inter, f, df, _, _) = fs!!idx 
                     in safeNewton err f df . fromMaybe inter
- | otherwise = error $ "No such function, try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ "No such function, try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performSafeNewtonFs #-}
 
 -- show function versions
@@ -42,21 +42,21 @@ performNewtonShowFs :: Int -> Double -> Int -> Maybe (Interval Double) -> IO ()
 performNewtonShowFs idx err maxI mx0
  | idx < maxNum = let (inter, f, df, strF, _) = fs!!idx 
                     in newtonShow err f df strF maxI $ fromMaybe inter mx0
- | otherwise = error $ " No such function.\n Try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ " No such function.\n Try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performNewtonShowFs #-}
 
 performNewtonMultShowFs :: Int -> Double -> Int -> Maybe (Interval Double) -> IO ()
 performNewtonMultShowFs idx err maxI mx0
  | idx < maxNum = let (inter, f, df, strF, _) = fs!!idx 
                     in newtonMultShow err f df strF maxI $ fromMaybe inter mx0
- | otherwise = error $ " No such function.\n Try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ " No such function.\n Try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performNewtonMultShowFs #-}
 
 performSafeNewtonShowFs :: Int -> Double -> Int -> Maybe (Interval Double) -> IO ()
 performSafeNewtonShowFs idx err maxI
  | idx < maxNum = let (inter, f, df, strF, _) = fs!!idx 
                     in safeNewtonShow err f df strF maxI . fromMaybe inter
- | otherwise = error $ " No such function.\n Try these numbers [0.." ++ (show $ length fs - 1) ++ "]."
+ | otherwise = error $ " No such function.\n Try these numbers [0.." ++ show (length fs - 1) ++ "]."
 {-# INLINE performSafeNewtonShowFs #-}
 
 -- interact function versions

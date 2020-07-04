@@ -9,7 +9,7 @@ import Data.Foldable (fold)
 subdivide :: (Fractional a, Ord a) => Int -> Interval a -> [Interval a]
 subdivide n x = let w = width x / fromIntegral n
                     (i,s) = (inf x, sup x)
-                 in [(i + (fromIntegral m) * w)...(i + (fromIntegral $ m + 1) * w) | m <- [0..n - 1]]
+                 in [(i + fromIntegral m * w)...(i + fromIntegral (m + 1) * w) | m <- [0..n - 1]]
 
 refinement :: (Fractional a, Ord a, Monoid b) => Int -> (Interval a -> b) -> Interval a -> b
 refinement 1 f = f

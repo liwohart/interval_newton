@@ -27,7 +27,7 @@ newton err f df = iter 1 <*> next 1
  where
   recp inter
    | (i,s) <- (inf inter, sup inter)
-   = (recip s ... recip i)
+   = recip s ... recip i
   next idx x
 #if MID
    | mx <- midpoint x 
@@ -51,7 +51,7 @@ newtonN err f df = iter <*> next
  where
   next x
    | mx <- midV x
-   = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx)))
+   = x `intersecV` (singleV mx !+! iga (df x) (negV $ f mx))
   iter ant curr
    | any ((<=err) . width) curr ||
      widthV curr <= err         ||
@@ -132,8 +132,7 @@ newtonNShow err f df maxI !x0 = iter 1 x0 (next x0)
  where
   next x
    | mx <- midV x
-   = x `intersecV` ((singleV mx) !+! (iga (df x) (negV $ f mx)))
-
+   = x `intersecV` (singleV mx !+! iga (df x) (negV $ f mx))
   iter idx ant curr
    | widthV curr <= err          ||
      isEmptyV curr               || 
@@ -169,7 +168,7 @@ newtonMultShow err f df strF maxI !x
  | 0 `notMember` df x = newtonShow err f df strF maxI x
  | otherwise = do
   putStrLn "split"
-  sequence_ $ map (newtonMultShow err f df strF maxI) bisection
+  mapM_ (newtonMultShow err f df strF maxI) bisection
  where
   bisection
    | mx <- midpoint x
