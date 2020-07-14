@@ -265,9 +265,10 @@ isEmpty = Numeric.Interval.null
 
 
 
-distance :: (Num a, Ord a) => Interval a -> Interval a -> a
-distance I.Empty _ = 0
-distance _ I.Empty = 0
+distance :: (Fractional a, Ord a) => Interval a -> Interval a -> a
+distance I.Empty I.Empty = 0
+distance I.Empty _ = 1/0
+distance _ I.Empty = 1/0
 distance i1 i2 = max distInf distSup
  where
   distInf = abs (inf i1 - inf i2)
