@@ -1,2 +1,2 @@
-# interval_newton
+# Interval Newton
 Implementation of the interval Newton Method.
