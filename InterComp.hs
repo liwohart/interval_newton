@@ -151,7 +151,7 @@ negV = map negate
 
 
 distanceV :: (Fractional a, Ord a) => IVector a -> IVector a -> a
-distanceV = (sum .) . zipWith distance
+distanceV = (maximum .) . zipWith distance
 {-# INLINE distanceV #-}
 
 
@@ -174,8 +174,8 @@ linSys = (,)
 
 
 
-mkJoined :: LinearSystem a -> Joined a
-mkJoined (mat, b) = [(mat !! i) ++ [b !! i] | i <- [0 .. length mat - 1]]
+mkJoined :: Matrix a -> Vector a -> Joined a
+mkJoined mat b = [(mat !! i) ++ [b !! i] | i <- [0 .. length mat - 1]]
 {-# INLINE mkJoined #-}
 
 
@@ -218,7 +218,7 @@ sum' = foldl' (!+!) (map (const 0) [0..])
 
 
 solve :: Fractional a => Matrix a -> Vector a -> Vector a
-solve = ((backSubs . ga' . mkJoined) .) . (,)
+solve = ((backSubs . ga') .) . mkJoined
 {-# INLINE solve #-}
 
 
@@ -233,12 +233,12 @@ backSubs mat = sol
 
 
 ga :: (Fractional a, Ord a) => Matrix a -> Vector a -> Vector a
-ga = ((backSubs . ga' . mkJoined) .) . (,)
+ga = solve
 
 
 
 iga :: (Fractional a, Ord a) => IMatrix a -> IVector a -> IVector a
-iga = ((backSubs . ga' . mkJoined) .) . (,)
+iga = solve
 {-# INLINE iga #-}
 
 
@@ -265,10 +265,9 @@ isEmpty = Numeric.Interval.null
 
 
 
-distance :: (Fractional a, Ord a) => Interval a -> Interval a -> a
-distance I.Empty I.Empty = 0
-distance I.Empty _ = 1/0
-distance _ I.Empty = 1/0
+distance :: (Num a, Ord a) => Interval a -> Interval a -> a
+distance I.Empty _ = 0
+distance _ I.Empty = 0
 distance i1 i2 = max distInf distSup
  where
   distInf = abs (inf i1 - inf i2)

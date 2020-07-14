@@ -1,9 +1,10 @@
 import System.Process (system)
-import Control.Monad (join)
+import qualified Graphics.Gloss as G
+import Control.Monad (join, when)
 import Numeric.IEEE (epsilon)
 import Data.Monoid (Sum(..),getSum)
 import Data.Maybe (fromMaybe)
-import Data.Foldable (foldr')
+import Data.Foldable (fold, foldr')
 import Data.List
 import Refinement
 import InterComp
@@ -13,17 +14,11 @@ import Fs
 import Performs
 import Fuck
 
-addVtoSubl :: (Fractional a, Ord a) => [IVector a] -> [Interval a] -> [IVector a]
-addVtoSubl vs xs = [ v ++ [x] |  v <- vs, x <- xs]
+addVtoSub :: (Fractional a, Ord a) => [IVector a] -> [Interval a] -> [IVector a]
+addVtoSub vs xs = [ v ++ [x] |  v <- vs, x <- xs]
 
-subdivNl :: (Fractional a, Ord a) => Int -> IVector a -> [IVector a]
-subdivNl n x = foldl' addVtoSubl [[]] $ map (subdivide n) x
-
-addVtoSubr :: (Fractional a, Ord a) => [Interval a] -> [IVector a] -> [IVector a]
-addVtoSubr xs vs = [ x:v |  x <- xs, v <- vs]
-
-subdivNr :: (Fractional a, Ord a) => Int -> IVector a -> [IVector a]
-subdivNr n x = foldr' addVtoSubr [[]] $ map (subdivide n) x
+subdivN :: (Fractional a, Ord a) => Int -> IVector a -> [IVector a]
+subdivN n x = foldl' addVtoSub [[]] $ map (subdivide n) x
 
 fe :: Ord a => [IVector a] -> [IVector a]
 fe = filter (not . isEmptyV)
@@ -66,11 +61,75 @@ tempNewtonNShow err f f' x0 = iter x0 (next x0)
             iter curr (next curr)
         dist vx vy = maximum $ zipWith (\x y -> abs (x - y)) vx vy 
 
-ref f f' = fmap (filter (not . isEmptyV)) . foldMap (fmap (:[]) . newtonN epsilon f f') . subdivNl 2
+ref f f' = fmap (filter (not . isEmptyV)) . foldMap (fmap (:[]) . newtonN epsilon f f') . subdivN 2
 
 m f f' = fmap join . mapM (ref f f')
 
 fil err (_,(_,r)) = widthV r <= err && not (isEmptyV r)
+
+mean l = sum l / fromIntegral (length l)
+
+meanSd l = let n = fromIntegral (length l)
+               m = sum l / n
+               aux = map ((^2) . subtract m) l
+            in (m, sum aux / (n - 1))
+
+maxMeanSd l = let (me,sd) = meanSd l
+               in (maximum l, me, sd)
+
+listOfResults
+    :: Double
+    -> (Vector Double -> IVector Double)
+    -> (IVector Double -> IMatrix Double)
+    -> IVector Double
+    -> Int
+    -> [(Sum Int, IVector Double)]
+listOfResults err f f' x0 n = map (newtonN err f f') $ subdivN n x0
+
+listOfIterations :: [(Sum Int, IVector Double)] -> [Double]
+listOfIterations = map
+    ( fromIntegral
+    . getSum
+    . fst)
+
+success :: Double -> [(Sum Int, IVector Double)] -> Bool
+success err = any 
+    ( (\v -> widthV v <= err && not (isEmptyV v))
+    . snd)
+
+garbage :: Double -> [(Sum Int, IVector Double)] -> Bool
+garbage err = any
+    ( (\v -> widthV v > err && not (isEmptyV v))
+    . snd)
+
+dataFn path err fn fn' x0 = do
+ writeFile path "n,maximo,media,variancia,sucesso,lixo\n"
+ putStrLn $ "\nPrinting Data to " ++ path ++ ".\n"
+ putStr "0"
+ mapM_ (\n -> do
+       let rs = listOfResults err fn fn' x0 n
+           suc = success err rs
+           garb = garbage err rs
+           is = listOfIterations rs
+           (ma,me,sd) = maxMeanSd is
+       appendFile path $ concat 
+           [ show n, ",\t"
+           , show ma, ",\t"
+           , show me, ",\t"
+           , show sd, ",\t"
+           , show (if suc then 1 else 0), ",\t"
+           , show (if garb then 1 else 0), "\n"]
+       let m = n `mod` 10
+       when (m == 0) $ putStr $ show n
+       when (m `elem` [3,5,7]) $ putChar '.')
+       [2..100]
+ putStr "\n"
+
+update = do
+  let x0 = [-2...2,-2...2]
+  dataFn "dataFn0.csv" 1e-10 fN0 fN0' x0
+  dataFn "dataFn1.csv" 1e-10 fN1 fN1' x0
+  dataFn "dataFn2.csv" 1e-10 fN2 fN2' x0
 
 main :: IO ()
 main = getOptions >>= performSafeFs
