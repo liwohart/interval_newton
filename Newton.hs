@@ -32,7 +32,7 @@ newton err f df = iter 1 <*> next 1
 #if MID
    | mx <- midpoint x 
 #else
-   | mx <- (if mod idx 2 == 0 then inf else sup) x
+   | mx <- (if even idx then inf else sup) x
 #endif
    = x `intersection` (singleton mx - f mx * recp (df x))
   iter idx ant curr
@@ -103,7 +103,7 @@ newtonShow err f df strF maxI x0 = do
 #if MID
    | mx <- midpoint x
 #else
-   | mx <- (if mod idx 2 == 0 then inf else sup) x
+   | mx <- (if even idx then inf else sup) x
 #endif
    = x `intersection` (singleton mx - f mx / df x)
 
