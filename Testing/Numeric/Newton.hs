@@ -1,17 +1,20 @@
+{- Multiple implemantations of the
+ - Interval Newton Method-}
 {-# LANGUAGE BangPatterns #-}
 {-# LANGUAGE CPP #-}
 #define MID 1
 
-module Newton (newton,
-               newtonShow,
-               newtonN,
-               newtonNShow,
-               safeNewton,
-               safeNewtonShow,
-               newtonMult,
-               newtonMultShow) where
+module Testing.Numeric.Newton 
+  ( newton
+  , newtonShow
+  , newtonN
+  , newtonNShow
+  , safeNewton
+  , safeNewtonShow
+  , newtonMult
+  , newtonMultShow) where
 
-import InterComp
+import Testing.Numeric.InterComp
 import Text.Printf (printf, PrintfArg(..))
 import Data.Monoid (Sum(..), getSum)
 import Control.Monad (join)

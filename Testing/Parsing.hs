@@ -1,12 +1,12 @@
-module Parsing (getOptions, ShowOpt(..)) where
+module Testing.Parsing (getOptions, ShowOpt(..)) where
 
 import System.Console.GetOpt
 import System.Environment (getArgs)
 import Data.Maybe (fromMaybe, maybe)
 import Data.Function ((&))
 import Data.Char (isDigit)
-import InterComp
-import Fs
+import Testing.Numeric.InterComp
+import Testing.Fs
 
 data ShowOpt
  = S

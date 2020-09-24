@@ -1,7 +1,7 @@
-module Fs (fs) where
+module Testing.Fs (fs) where
 
-import InterComp
-import Fuck
+import Testing.Numeric.InterComp
+import Testing.Fuck
 
 fs :: (Floating a, Ord a) =>
       [(Interval a, a -> Interval a, Interval a -> Interval a, String, Maybe (Interval a))]

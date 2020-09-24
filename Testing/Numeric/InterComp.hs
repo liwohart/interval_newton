@@ -1,31 +1,34 @@
-module InterComp (module Numeric.Interval,
-                  module I,
-                  LinearSystem,
-                  (!+!), (*!),
-                  negV,
-                  ga, iga,
-                  backSubs,
-                  isEmpty,
-                  distance,
-                  distanceV,
-                  intersecV,
-                  singleV,
-                  midV,
-                  widthV,
-                  isEmptyV,
-                  (\/), (!^),
-                  gH,
-                  monotonic,
-                  reciprical,
-                  Vector,
-                  Matrix,
-                  IVector,
-                  IMatrix,
-                  showVM,
-                  isin,
-                  icos,
-                  upperHalf,
-                  lowerHalf) where
+{- This module is a complement for the
+ - Numeric.Interval created by Edward Kmett-}
+module Testing.Numeric.InterComp
+  ( module Numeric.Interval
+  , module I
+  , LinearSystem
+  , (!+!), (*!)
+  , negV
+  , ga, iga
+  , backSubs
+  , isEmpty
+  , distance
+  , distanceV
+  , intersecV
+  , singleV
+  , midV
+  , widthV
+  , isEmptyV
+  , (\/), (!^)
+  , gH
+  , monotonic
+  , reciprical
+  , Vector
+  , Matrix
+  , IVector
+  , IMatrix
+  , showVM
+  , isin
+  , icos
+  , upperHalf
+  , lowerHalf) where
 
 
 
@@ -198,7 +201,7 @@ ga' mat = fst $ iterate update (mat, 0)!!(length mat - 1)
 
 
 sum' :: Num a => [Vector a] -> Vector a
-sum' = foldl' (!+!) (map (const 0) [0..])
+sum' = foldl' (!+!) $ repeat 0
 {-# INLINE sum' #-}
 
 

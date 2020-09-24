@@ -1,11 +1,11 @@
-module Performs (performFs, performMultFs, performSafeFs) where
+module Testing.Performs (performFs, performMultFs, performSafeFs) where
 
 import Data.Monoid (Sum(..))
 import Data.Maybe (fromMaybe)
-import InterComp (Interval(..), (...))
-import Parsing (ShowOpt(..))
-import Newton
-import Fs
+import Testing.Numeric.InterComp (Interval(..), (...))
+import Testing.Parsing (ShowOpt(..))
+import Testing.Numeric.Newton
+import Testing.Fs
 
 
 fromTuple :: Ord a => (a,a) -> Interval a

@@ -6,13 +6,13 @@ import Data.Monoid (Sum(..),getSum)
 import Data.Maybe (fromMaybe)
 import Data.Foldable (fold, foldr')
 import Data.List
-import Refinement
-import InterComp
-import Newton
-import Parsing
-import Fs
-import Performs
-import Fuck
+import Testing.Numeric.Refinement
+import Testing.Numeric.InterComp
+import Testing.Numeric.Newton
+import Testing.Parsing
+import Testing.Fs
+import Testing.Performs
+import Testing.Fuck
 
 addVtoSub :: (Fractional a, Ord a) => [IVector a] -> [Interval a] -> [IVector a]
 addVtoSub vs xs = [ v ++ [x] |  v <- vs, x <- xs]
@@ -117,8 +117,8 @@ dataFn path err fn fn' x0 = do
            , show ma, ",\t"
            , show me, ",\t"
            , show sd, ",\t"
-           , show (if suc then 1 else 0), ",\t"
-           , show (if garb then 1 else 0), "\n"]
+           , show (fromEnum suc), ",\t"
+           , show (fromEnum garb), "\n"]
        let m = n `mod` 10
        when (m == 0) $ putStr $ show n
        when (m `elem` [3,5,7]) $ putChar '.')

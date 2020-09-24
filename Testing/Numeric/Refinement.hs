@@ -1,7 +1,7 @@
-module Refinement where
+module Testing.Numeric.Refinement where
 
-import InterComp
-import Newton
+import Testing.Numeric.InterComp
+import Testing.Numeric.Newton
 import Data.Foldable (fold)
 
 
