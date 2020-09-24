@@ -4,4 +4,5 @@
 **/*~
 **/*.csv
 .ghci
+dist/
 __pycache__/
