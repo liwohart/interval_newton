@@ -3,6 +3,5 @@
 **/*.exe
 **/*~
 **/*.csv
-**/Fuck*
 .ghci
 __pycache__/

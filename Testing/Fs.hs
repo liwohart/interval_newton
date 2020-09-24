@@ -1,7 +1,7 @@
 module Testing.Fs (fs) where
 
 import Testing.Numeric.InterComp
-import Testing.Fuck
+import Testing.F
 
 fs :: (Floating a, Ord a) =>
       [(Interval a, a -> Interval a, Interval a -> Interval a, String, Maybe (Interval a))]

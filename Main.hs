@@ -12,7 +12,7 @@ import Testing.Numeric.Newton
 import Testing.Parsing
 import Testing.Fs
 import Testing.Performs
-import Testing.Fuck
+import Testing.F
 
 addVtoSub :: (Fractional a, Ord a) => [IVector a] -> [Interval a] -> [IVector a]
 addVtoSub vs xs = [ v ++ [x] |  v <- vs, x <- xs]
